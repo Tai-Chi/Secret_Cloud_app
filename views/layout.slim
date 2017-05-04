@@ -2,10 +2,12 @@ doctype html
 html
   head
     title Secret Cloud
+    link rel='stylesheet' href='/style.css'
   body
     header
       h1 Secret Cloud
     nav
       == slim :nav
     section
+      == slim :flash_bar
       == yield

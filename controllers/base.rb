@@ -2,6 +2,7 @@
 
 require 'econfig'
 require 'sinatra'
+require 'rack-flash'
 require 'rack/ssl-enforcer'
 
 # Base class for ConfigShare Web Application
@@ -17,6 +18,8 @@ class FileSystemSyncApp < Sinatra::Base
   use Rack::Session::Cookie, expire_after: ONE_MONTH
 
   set :views, File.expand_path('../../views', __FILE__)
+  set :public_dir, File.expand_path('../../public', __FILE__)
+  use Rack::Flash
 
   configure do
     Econfig.env = settings.environment.to_s
