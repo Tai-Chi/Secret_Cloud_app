@@ -25,26 +25,19 @@ class FileSystemSyncApp < Sinatra::Base
         redirect '/account/register'
       end
 
-      if params[:password] == nil || params[:password] == ''
-        flash[:error] = 'Password is required'
-        redirect '/account/register'
-      end
-
-      if params[:password_confirm] != params[:password]
-        flash[:error] = 'Retyped password does not match'
-        redirect '/account/register'
-      end
-
-      new_account = CreateAccount.new(settings.config).call(
-        username: params[:username], email: params[:email], password: params[:password]
-      )
-
-      if new_account
-        flash[:notice] = "Account #{new_account[:username]} has been created successfully"
+      begin
+        EmailRegistrationVerification.new(settings.config).call(
+          username: params[:username],
+          email: params[:email]
+        )
+        flash[:notice] = 'A verification email has been sent to you. '\
+                        'Please check your email.'
         redirect '/'
-      else
-        flash[:error] = "The username #{params[:username]} has been used by other account"
-        slim :register
+      rescue => e
+        logger.error "FAILED TO SEND EMAIL: #{e}"
+        flash[:error] = 'Unable to send email verification -- Sorry, '\
+                        'we will recover our system soon.'
+        redirect '/account/register'
       end
     end
   end

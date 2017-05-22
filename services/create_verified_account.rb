@@ -2,7 +2,7 @@
 
 require 'http'
 
-class CreateAccount
+class CreateVerifiedAccount
   def initialize(config)
     @config = config
   end
@@ -12,6 +12,6 @@ class CreateAccount
                          json: { username: username,
                                  email: email,
                                  passwd: password })
-    response.code == 200 ? { username: username } : nil
+    response.code == 200
   end
 end
