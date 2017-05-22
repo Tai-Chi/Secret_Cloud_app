@@ -4,6 +4,7 @@ require 'econfig'
 require 'sinatra'
 require 'rack-flash'
 require 'rack/ssl-enforcer'
+require 'rack/session/redis'
 
 # Base class for ConfigShare Web Application
 class FileSystemSyncApp < Sinatra::Base
@@ -15,19 +16,29 @@ class FileSystemSyncApp < Sinatra::Base
     use Rack::SslEnforcer
   end
 
-  use Rack::Session::Cookie, expire_after: ONE_MONTH
-
   set :views, File.expand_path('../../views', __FILE__)
   set :public_dir, File.expand_path('../../public', __FILE__)
-  use Rack::Flash
 
   configure do
     Econfig.env = settings.environment.to_s
     Econfig.root = File.expand_path('..', settings.root)
+
+    SecureMessage.setup(settings.config)
+    SecureSession.setup(settings.config)
   end
 
+  configure :development, :test do
+    use Rack::Session::Pool, expire_after: ONE_MONTH
+  end
+
+  configure :production do
+    use Rack::Session::Redis, expire_after: ONE_MONTH, redis_server: settings.config.REDIS_URL
+  end
+
+  use Rack::Flash
+
   before do
-    @current_account = session[:current_account]
+    @current_account = SecureSession.new(session).get(:current_account)
   end
 
   get '/' do

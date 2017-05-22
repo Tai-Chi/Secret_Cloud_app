@@ -17,8 +17,9 @@ class FileSystemSyncApp < Sinatra::Base
     )
 
     if @current_account
-      session[:current_account] = @current_account
-      flash[:error] = "Welcome back #{@current_account[:username]}"
+      SecureSession.new(session).set(:current_account, @current_account)
+      puts "SESSION: #{session[:current_account]}"
+      flash[:notice] = "Welcome back #{@current_account[:username]}"
       redirect '/'
     else
       flash[:error] = 'Your username or password did not match our records'

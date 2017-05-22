@@ -20,6 +20,11 @@ class FileSystemSyncApp < Sinatra::Base
         redirect '/account/register'
       end
 
+      if params[:email] == nil || params[:email] == ''
+        flash[:error] = 'Email is required'
+        redirect '/account/register'
+      end
+
       if params[:password] == nil || params[:password] == ''
         flash[:error] = 'Password is required'
         redirect '/account/register'
@@ -31,7 +36,7 @@ class FileSystemSyncApp < Sinatra::Base
       end
 
       new_account = CreateAccount.new(settings.config).call(
-        username: params[:username], password: params[:password]
+        username: params[:username], email: params[:email], password: params[:password]
       )
 
       if new_account

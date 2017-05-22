@@ -7,6 +7,7 @@ gem 'econfig'
 gem 'puma'
 gem 'rack-flash3'
 gem 'rack-ssl-enforcer'
+gem 'rbnacl-libsodium'
 gem 'sinatra'
 gem 'slim'
 
@@ -14,6 +15,9 @@ gem 'rake'
 gem 'tux'
 
 gem 'http'
+gem 'pony'
+gem 'redis'
+gem 'redis-rack'
 
 group :test do
   gem 'minitest'
