@@ -1,1 +1,14 @@
-p ＂[TODO: Slogan]＂
+- if @current_account != nil
+    - file_system_list = GetFileSystemList.new(settings.config).call(username: @current_account[:username])
+    script src="check_all.js"
+    p
+      form id='user-form' method='post' action='/submit/download'
+        put Please select files you want to download
+        br
+        - for pathUnits in file_system_list do
+          input type='checkbox' name='file[]' class="#{pathUnits[0...-1].join('/')}" value="#{pathUnits.join('/')}" onclick="check_all(this,value)"
+          label #{"/".concat(pathUnits.join('/'))}
+          br
+        input type='submit' id='download-form-submit' class='submit' value='submit'
+- else
+    p 'Welcome to Homepage of Secret Cloud!!'
