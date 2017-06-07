@@ -1,5 +1,5 @@
 - if @current_account != nil
-    - file_system_list = GetFileSystemList.new(settings.config).call(username: @current_account[:username])
+    - file_system_list = GetFileSystemList.new(settings.config).call(username: @current_account['username'])
     script src="check_all.js"
     p
       form id='user-form' method='post' action='/submit/download'
