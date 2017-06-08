@@ -21,9 +21,9 @@ class FileSystemSyncApp < Sinatra::Base
 
       # Get info of those files to download
       params['file'].each do |file|
-        HTTP.post("#{settings.config.API_URL}/download/select",
-                  json: { "username": @current_account['username'],
-                          "src_path": file,
+        HTTP.auth("Bearer #{@auth_token}")
+            .post("#{settings.config.API_URL}/download/select",
+                  json: { "src_path": file,
                           "dst_path": file.sub(lcp,'') }
                  )
         # The variable file here may be a folder or a file. However
