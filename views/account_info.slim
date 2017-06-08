@@ -1,0 +1,34 @@
+h1 Account Details
+
+table
+  tr
+    td Username
+    td
+      == @current_account['username']
+  tr
+    td Email
+    td
+      == @current_account['email']
+
+h1 Google Account Details
+
+table border="1"
+  - if @gaccounts.size > 0
+    thead
+      tr
+        th
+          b Account Name
+        th
+          b Available Space(KB)
+  - else
+    == 'No available Google account.'
+  - @gaccounts.each do |gaccount|
+    tr
+      td
+        == gaccount['attributes']['name']
+      td
+        == gaccount['attributes']['size']
+form action='/gaccount/add' method='post' id='user-form'
+  input type='text' name='name' id='name_input' required=true
+  == '@gmail.com '
+  input type='submit' id='gaccount-form-submit' class='submit' value='add'

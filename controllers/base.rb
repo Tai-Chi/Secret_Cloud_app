@@ -37,6 +37,13 @@ class FileSystemSyncApp < Sinatra::Base
 
   use Rack::Flash
 
+  def redirected_if_not_logged_in()
+    return true if @current_account
+    flash[:error] = 'You should log in first.'
+    redirect '/account/login'
+    halt
+  end
+
   before do
     @current_account = SecureSession.new(session).get(:current_account)
     @auth_token = SecureSession.new(session).get(:auth_token)
