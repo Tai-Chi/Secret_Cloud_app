@@ -3,8 +3,9 @@ class GetFileSystemList
     @config = config
   end
 
-  def call(username:)
-    response = HTTP.post("#{@config.API_URL}/filesystem", json: { username: username })
+  def call(auth_token:)
+    response = HTTP.auth("Bearer #{auth_token}")
+                   .post("#{@config.API_URL}/filesystem")
     @file_system_list = []
     self.DFS(JSON.parse(response.body), []) if response.code == 200
     @file_system_list.shift
